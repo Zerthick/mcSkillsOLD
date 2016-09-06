@@ -27,7 +27,7 @@ import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
-import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Root;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,7 +43,7 @@ public abstract class HarvestSkill extends AbstractSkill {
     }
 
     @Listener
-    public void onBlockBreak(ChangeBlockEvent.Break event, @First Player player) {
+    public void onBlockBreak(ChangeBlockEvent.Break event, @Root Player player) {
         List<BlockSnapshot> blocks = event.getTransactions().stream()
                 .map(Transaction::getOriginal).filter(s -> experienceMap.containsKey(processBlockStateID(s.getState())) && !s.getCreator().isPresent())
                 .collect(Collectors.toList());
