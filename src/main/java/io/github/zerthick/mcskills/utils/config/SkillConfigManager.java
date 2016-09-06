@@ -21,7 +21,6 @@ package io.github.zerthick.mcskills.utils.config;
 
 import io.github.zerthick.mcskills.McSkills;
 import io.github.zerthick.mcskills.skill.ISkill;
-import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -35,9 +34,6 @@ public class SkillConfigManager {
 
     private McSkills plugin;
     private Logger logger;
-    private File skillConfigFile;
-    private ConfigurationLoader<CommentedConfigurationNode> loader;
-    private ConfigurationNode skillConfig;
 
     public SkillConfigManager(McSkills plugin) {
         this.plugin = plugin;
@@ -51,19 +47,15 @@ public class SkillConfigManager {
         if (!skillConfigFile.exists()) {
             try {
                 loader.save(skill.setUpDefaultConfig());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ObjectMappingException e) {
-                e.printStackTrace();
+            } catch (IOException | ObjectMappingException e) {
+                logger.warn("Error generating " + skill.getSkillID() + " default config! Error:" + e.getMessage());
             }
         }
 
         try {
             skill.fromConfig(loader.load());
-        } catch (ObjectMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ObjectMappingException | IOException e) {
+            logger.warn("Error loading " + skill.getSkillID() + " config! Error:" + e.getMessage());
         }
     }
 }
